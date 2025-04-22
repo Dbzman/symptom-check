@@ -1,5 +1,13 @@
 <div class="text-[#546E4F]">
-        <img src="{{ asset('img/icons/' . $question['icon']) }}" alt="Icon" class="h-20 mr-2">
+        @if(isset($question['svg_icon']) && $question['svg_icon'])
+            <div class="mb-4 flex justify-center">
+                <div class="w-32 h-32">
+                    {!! $question['svg_icon'] !!}
+                </div>
+            </div>
+        @elseif(isset($question['icon']))
+            <img src="{{ asset('img/icons/' . $question['icon']) }}" alt="Icon" class="h-20 mr-2">
+        @endif
         <h2 class="text-xl font-semibold mb-4 flex items-center">
             <span class="mr-2">{{ $question['text'] }}</span>
             <span class="w-4 h-4 rounded-full

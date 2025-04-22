@@ -12,6 +12,11 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public function canAccessFilament(): bool
+    {
+        return true; // or implement more advanced logic
+    }
+
     /**
      * The attributes that are mass assignable.
      *
