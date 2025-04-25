@@ -85,6 +85,31 @@ class SymptomForm extends Component
             ->count();
     }
 
+    public function evaluateResultForLevel($levelId)
+    {
+        if (!$this->outcome) {
+            // Find questions answered 'yes' for the specified level
+            $levelYesAnswers = collect($this->answers)
+                ->filter(fn($v) => $v === 'yes')
+                ->keys()
+                ->map(fn($id) => Question::with('criticalityLevel')->find($id))
+                ->filter()
+                ->filter(fn($q) => $q->criticality_level_id === $levelId);
+
+            // Get the first 'yes' answered question for this level
+            $relevantQuestion = $levelYesAnswers->first();
+
+            if ($relevantQuestion) {
+                // Find and set the appropriate outcome for this level and disease
+                $this->outcome = Outcome::where('criticality_level_id', $levelId)
+                    ->where('disease_id', $relevantQuestion->disease_id)
+                    ->first()?->description;
+            }
+        }
+
+        $this->saveSession();
+    }
+
     public function startSymptomForm()
     {
         $this->phase = 'questions';
@@ -119,12 +144,16 @@ class SymptomForm extends Component
             ->get();
 
         $grouped = $questions->groupBy('criticality_level_id');
-        // Order by sort_order field
+        // Order by sort_order field and then by question's sort_order if available
         $levels = CriticalityLevel::orderBy('sort_order')->get();
 
         foreach ($levels as $level) {
             if ($grouped->has($level->id)) {
-                $levelQuestions = $grouped[$level->id]->shuffle();
+                // Instead of shuffling, order by sort_order if available, or id as fallback
+                $levelQuestions = $grouped[$level->id]->sortBy([
+                    ['sort_order', 'asc'],
+                    ['id', 'asc']
+                ]);
                 foreach ($levelQuestions as $q) {
                     $this->questionQueue[] = $q;
                 }
