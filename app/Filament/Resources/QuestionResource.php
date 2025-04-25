@@ -60,8 +60,8 @@ class QuestionResource extends Resource
             Select::make('gender')
                 ->label(__('filament.resources.questions.fields.gender'))
                 ->options([
-                    'male' => 'Male',
-                    'female' => 'Female',
+                    'male' => __('filament.resources.questions.options.gender.male'),
+                    'female' => __('filament.resources.questions.options.gender.female'),
                 ])
                 ->nullable()
                 ->helperText(__('filament.resources.questions.helpers.gender')),
@@ -81,7 +81,7 @@ class QuestionResource extends Resource
                 ImageColumn::make('icon'),
                 TextColumn::make('text')->label(__('filament.resources.questions.fields.text'))->searchable(),
                 TextColumn::make('disease.name')->label(__('filament.resources.questions.fields.disease')),
-                TextColumn::make('gender')->label(__('filament.resources.questions.fields.gender')),
+                TextColumn::make('gender')->label(__('filament.resources.questions.fields.gender'))->formatStateUsing(fn (string $state): string => __("filament.resources.questions.options.gender.{$state}")),
                 TextColumn::make('criticalityLevel.name')->label(__('filament.resources.questions.fields.criticality_level')),
             ])
             ->defaultSort('id', 'asc');

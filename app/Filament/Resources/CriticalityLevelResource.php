@@ -6,11 +6,13 @@ use App\Filament\Resources\CriticalityLevelResource\Pages;
 use App\Filament\Resources\CriticalityLevelResource\RelationManagers;
 use App\Models\CriticalityLevel;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -45,9 +47,14 @@ class CriticalityLevelResource extends Resource
                 ->label(__('filament.resources.criticality-levels.fields.name'))
                 ->required()
                 ->maxLength(255),
-            TextInput::make('color')
+            Select::make('color')
                 ->label(__('filament.resources.criticality-levels.fields.color'))
-                ->maxLength(255),
+                ->options([
+                    'red' => __('filament.color.red'),
+                    'orange' => __('filament.color.orange'),
+                    'green' => __('filament.color.green'),
+                    'gray' => __('filament.color.gray'),
+                ])->default('gray'),
             Toggle::make('immediate_result')
                 ->label(__('filament.resources.criticality-levels.fields.immediate_result'))
                 ->helperText(__('filament.resources.criticality-levels.fields.immediate_result_help')),
@@ -59,7 +66,7 @@ class CriticalityLevelResource extends Resource
         return $table->columns([
             TextColumn::make('sort_order')->label(__('filament.resources.criticality-levels.fields.sort_order'))->sortable(),
             TextColumn::make('name')->label(__('filament.resources.criticality-levels.fields.name'))->sortable()->searchable(),
-            TextColumn::make('color')->label(__('filament.resources.criticality-levels.fields.color'))->sortable()->searchable(),
+            ColorColumn::make('color')->label(__('filament.resources.criticality-levels.fields.color'))->sortable()->searchable(),
             ToggleColumn::make('immediate_result')->label(__('filament.resources.criticality-levels.fields.immediate_result'))->disabled()->searchable(),
         ])->reorderable('sort_order')->defaultSort('sort_order');
     }

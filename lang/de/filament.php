@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'color' => [
+        'red' => 'Rot',
+        'orange' => 'Orange',
+        'yellow' => 'Gelb',
+        'green' => 'Grün',
+        'gray' => 'Grau',
+    ],
     'navigation' => [
         'groups' => [
             'settings' => 'Einstellungen',
