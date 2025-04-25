@@ -19,6 +19,20 @@ class SetLocaleMiddleware
     {
         if (Session::has('locale')) {
             App::setLocale(Session::get('locale'));
+        } else {
+            // Get browser language
+            $browserLang = $request->getPreferredLanguage();
+
+            // Get the language code (first 2 characters, e.g., 'en' from 'en-US')
+            $langCode = substr($browserLang, 0, 2);
+
+            // Check if the language is supported (you can expand this array with supported languages)
+            $supportedLanguages = ['en', 'de'];
+
+            if (in_array($langCode, $supportedLanguages)) {
+                App::setLocale($langCode);
+                Session::put('locale', $langCode);
+            }
         }
 
         return $next($request);

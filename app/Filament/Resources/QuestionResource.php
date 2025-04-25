@@ -13,6 +13,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,6 +78,7 @@ class QuestionResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('icon'),
                 TextColumn::make('text')->label(__('filament.resources.questions.fields.text'))->searchable(),
                 TextColumn::make('disease.name')->label(__('filament.resources.questions.fields.disease')),
                 TextColumn::make('gender')->label(__('filament.resources.questions.fields.gender')),

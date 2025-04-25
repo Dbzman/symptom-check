@@ -6,6 +6,7 @@ use App\Models\CriticalityLevel;
 use App\Models\Outcome;
 use App\Models\Question;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class SymptomForm extends Component
@@ -14,6 +15,7 @@ class SymptomForm extends Component
     public array $answers = [];
     public string $phase = 'gender';
     public ?string $outcome = null;
+    public ?string $currentAnswer = null;
 
     public $currentQuestion;
     public $questionQueue = [];
@@ -36,6 +38,20 @@ class SymptomForm extends Component
     public function getLevelColor()
     {
         return $this->getCurrentLevel()?->color ?? 'gray';
+    }
+
+    public function hasIcon()
+    {
+        return !empty($this->currentQuestion?->icon);
+    }
+
+    public function getIconUrl()
+    {
+        if (!$this->hasIcon()) {
+            return null;
+        }
+
+        return Storage::url($this->currentQuestion->icon);
     }
 
     public function getNextButtonColor()
@@ -63,29 +79,32 @@ class SymptomForm extends Component
 
     public function getAnsweredInLevel()
     {
-        // Now we just store the gender but don't start the form yet
-    }
-
-    public function startSymptomForm()
-    {
         $currentLevelId = $this->getCurrentLevelId();
         return collect($this->history)
             ->filter(fn($q) => $q->criticality_level_id === $currentLevelId)
             ->count();
     }
 
+    public function startSymptomForm()
+    {
+        $this->phase = 'questions';
+        $this->loadQuestions();
+        $this->saveSession();
+    }
+
     public function getProgressPercentage()
     {
         $total = $this->getTotalInLevel();
         if ($total === 0) {
-            return 0;
+            return 2;
         }
-        return round(($this->getAnsweredInLevel() / $total) * 100);
+
+        $percentage = round(($this->getAnsweredInLevel() / $total) * 100);
+        return max(2, $percentage); // Return at least 10%
     }
 
     public function updatedGender($value)
     {
-        $this->loadQuestions();
         $this->saveSession();
     }
 
@@ -133,6 +152,9 @@ class SymptomForm extends Component
                 $this->currentQuestion = $this->questionQueue->first();
                 $this->questionQueue = $this->questionQueue->slice(1);
             }
+
+            // Reset current answer for new question
+            $this->currentAnswer = null;
         } else {
             $this->phase = 'result';
             $this->evaluateResult();
@@ -159,14 +181,23 @@ class SymptomForm extends Component
                 $this->history = $this->history->slice(0, -1);
             }
 
+            // Restore previous answer if available
+            $this->currentAnswer = $this->answers[$this->currentQuestion->id] ?? null;
             unset($this->answers[$this->currentQuestion->id]);
         }
 
         $this->saveSession();
     }
 
-    public function answer($value)
+    public function answer($value = null)
     {
+        // If no value provided, use the currentAnswer property
+        $value = $value ?? $this->currentAnswer;
+
+        if (!$value) {
+            return;
+        }
+
         $this->answers[$this->currentQuestion->id] = $value;
 
         if ($value === 'yes') {
@@ -181,6 +212,7 @@ class SymptomForm extends Component
             }
         }
 
+        $this->currentAnswer = null;
         $this->nextQuestion();
     }
 
@@ -217,6 +249,7 @@ class SymptomForm extends Component
             'queue' => collect($this->questionQueue)->pluck('id')->toArray(),
             'history' => collect($this->history)->pluck('id')->toArray(),
             'current' => $this->currentQuestion?->id,
+            'currentAnswer' => $this->currentAnswer,
         ]);
     }
 
@@ -227,6 +260,7 @@ class SymptomForm extends Component
             $this->answers = $session['answers'] ?? [];
             $this->phase = $session['phase'] ?? 'gender';
             $this->outcome = $session['outcome'] ?? null;
+            $this->currentAnswer = $session['currentAnswer'] ?? null;
 
             $this->questionQueue = Question::findMany($session['queue'] ?? [])->values();
             $this->history = Question::findMany($session['history'] ?? [])->values();
@@ -249,6 +283,6 @@ class SymptomForm extends Component
 
     public function render()
     {
-        return view('livewire.symptom-form')->layout('layouts.guest');
+        return view('livewire.symptom-form')->layout('layouts.frontend');
     }
 }

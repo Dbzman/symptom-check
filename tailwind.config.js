@@ -9,6 +9,16 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    safelist: [
+        {
+            pattern: /bg-.*00/,
+            variants: ['hover', 'focus', 'active'],
+        },
+        {
+            pattern: /.*text-.*00/
+        },
+    ],
+
     theme: {
         extend: {
             fontFamily: {

@@ -57,6 +57,7 @@ class CriticalityLevelResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
+            TextColumn::make('sort_order')->label(__('filament.resources.criticality-levels.fields.sort_order'))->sortable(),
             TextColumn::make('name')->label(__('filament.resources.criticality-levels.fields.name'))->sortable()->searchable(),
             TextColumn::make('color')->label(__('filament.resources.criticality-levels.fields.color'))->sortable()->searchable(),
             ToggleColumn::make('immediate_result')->label(__('filament.resources.criticality-levels.fields.immediate_result'))->disabled()->searchable(),
