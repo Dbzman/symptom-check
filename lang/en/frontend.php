@@ -1,7 +1,10 @@
 <?php
 
 return [
-    'outcome' => 'Outcome',
+    'outcome' => [
+        'title' => 'Outcome',
+        'nothingDetected' => 'No disease detected detected.'
+    ],
     'reset' => 'Start over',
     'previous' => 'Previous',
     'next' => 'Next',

@@ -145,12 +145,42 @@ class SymptomForm extends Component
         }
 
         if ($this->questionQueue && count($this->questionQueue) > 0) {
+            $oldLevelId = $this->getCurrentLevelId();
+
             if (is_array($this->questionQueue)) {
                 $this->currentQuestion = array_shift($this->questionQueue);
             } else {
                 // When it's a collection, get the first item and remove it
                 $this->currentQuestion = $this->questionQueue->first();
                 $this->questionQueue = $this->questionQueue->slice(1);
+            }
+
+            // If we're moving to a new level, check if there were any 'yes' answers in the previous level
+            $newLevelId = $this->getCurrentLevelId();
+            if ($oldLevelId && $oldLevelId !== $newLevelId) {
+                // Look for 'yes' answers in the level we just completed
+                if (collect($this->answers)
+                    ->filter(fn($v) => $v === 'yes')
+                    ->keys()
+                    ->map(fn($id) => Question::with('criticalityLevel')->find($id))
+                    ->filter()
+                    ->filter(fn($q) => $q->criticality_level_id === $oldLevelId)
+                    ->isNotEmpty()) {
+
+                    // Put the question back in the queue
+                    if (is_array($this->questionQueue)) {
+                        array_unshift($this->questionQueue, $this->currentQuestion);
+                    } else {
+                        $this->questionQueue = collect([$this->currentQuestion])->concat($this->questionQueue);
+                    }
+
+                    // Set the current question to null as we're moving to results
+                    $this->currentQuestion = null;
+                    $this->phase = 'result';
+                    $this->evaluateResultForLevel($oldLevelId);
+                    $this->saveSession();
+                    return;
+                }
             }
 
             // Reset current answer for new question
@@ -232,7 +262,7 @@ class SymptomForm extends Component
                     ->where('disease_id', $mostSevereYes->disease_id)
                     ->first()?->description;
             } else {
-                $this->outcome = 'No critical symptoms detected.';
+                $this->outcome = __('frontend.outcome.nothingDetected');;
             }
         }
 

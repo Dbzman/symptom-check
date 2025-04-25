@@ -1,7 +1,10 @@
 <?php
 
 return [
-    'outcome' => 'Ergebnis',
+    'outcome' => [
+        'title' => 'Ergebnis',
+        'nothingDetected' => 'Keine Krankheiten erkannt.'
+    ],
     'reset' => 'Test erneut durchführen',
     'previous' => 'Zurück',
     'next' => 'Weiter',
