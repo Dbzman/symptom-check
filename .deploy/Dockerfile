@@ -1,4 +1,4 @@
-ARG PHP_VERSION=${PHP_VERSION:-7.4}
+ARG PHP_VERSION=${PHP_VERSION:-8.4}
 
 
 FROM php:${PHP_VERSION}-fpm-alpine AS php-system-setup
@@ -50,6 +50,7 @@ COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP . $LARAVEL_PATH/
 COPY ./.deploy/config/php/local.ini /usr/local/etc/php/conf.d/local.ini
 
 USER root
+RUN apk upgrade
 RUN apk --update add nodejs npm
 USER $NON_ROOT_USER
 RUN npm ci
