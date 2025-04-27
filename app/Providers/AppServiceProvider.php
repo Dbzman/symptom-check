@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->isProduction()) {
             URL::forceScheme('https');
+            request()->server->set('HTTPS', request()->header('X-Forwarded-Proto', 'https') == 'https' ? 'on' : 'off');
         }
         LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
             $switch
