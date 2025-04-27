@@ -8,6 +8,7 @@ use App\Models\Disease;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -58,9 +59,10 @@ class DiseaseResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [RelationGroup::make('QuestionsAndOutcomes', [
+            RelationManagers\QuestionsRelationManager::class,
+            RelationManagers\OutcomesRelationManager::class,
+        ])];
     }
 
     public static function getPages(): array
