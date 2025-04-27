@@ -60,6 +60,15 @@ return [
             'report' => false,
         ],
 
+        'sftp' => [
+            'driver' => 'sftp',
+            'host' => env('SFTP_HOST'),
+            'url' => env('IMAGES_URL'),
+            // Settings for basic authentication...
+            'username' => env('SFTP_USERNAME'),
+            'password' => env('SFTP_PASSWORD'),
+        ],
+
     ],
 
     /*
