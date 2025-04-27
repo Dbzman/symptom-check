@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CriticalityLevel extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'color', 'immediate_result', 'sort_order'];
 
     public function questions(): HasMany
     {
