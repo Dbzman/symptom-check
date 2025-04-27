@@ -290,8 +290,11 @@ class SymptomForm extends Component
                 $this->outcome = Outcome::where('criticality_level_id', $mostSevereYes->criticality_level_id)
                     ->where('disease_id', $mostSevereYes->disease_id)
                     ->first()?->description;
+                // Keep the current question set when there's a positive outcome
             } else {
-                $this->outcome = __('frontend.outcome.nothingDetected');;
+                $this->outcome = __('frontend.outcome.nothingDetected');
+                // Reset the current question to null when nothing is detected
+                $this->currentQuestion = null;
             }
         }
 

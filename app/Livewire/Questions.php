@@ -11,9 +11,11 @@ class Questions extends Component
         ['text' => 'feucht-kalte oder marmorierte Haut', 'criticality' => 2, 'checked' => false, 'answered' => false, 'icon' => '1.svg'],
         ['text' => 'extreme Schmerzen', 'criticality' => 2, 'checked' => false, 'answered' => false, 'icon' => '1.svg'],
         ['text' => 'veränderter Puls: unter 50 oder über 120/min', 'criticality' => 2, 'checked' => false, 'answered' => false, 'icon' => '4.svg'],
+
         ['text' => 'Verwirrtheit, Wesensänderung, Apathie', 'criticality' => 3, 'checked' => false, 'answered' => false, 'icon' => '5.svg'],
         ['text' => 'Mehr als 20 Atemzüge pro Minute', 'criticality' => 3, 'checked' => false, 'answered' => false, 'icon' => '6.svg'],
         ['text' => 'Oberer Blutdruckwert kleiner als 100', 'criticality' => 3, 'checked' => false, 'answered' => false, 'icon' => '7.jpg'],
+
         ['text' => 'Husten, Halsschmerzen', 'criticality' => 1, 'checked' => false, 'answered' => false, 'icon' => '8.svg'],
         ['text' => 'Ohrenschmerzen', 'criticality' => 1, 'checked' => false, 'answered' => false, 'icon' => '9.svg'],
         ['text' => 'Fieber oder Schüttelfrost', 'criticality' => 1, 'checked' => false, 'answered' => false, 'icon' => '10.svg'],
