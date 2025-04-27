@@ -47,6 +47,10 @@ return [
             ],
         ],
         'questions' => [
+            'general' => [
+                'singular' => 'Allgemeine Frage',
+                'plural' => 'Allgemeine Fragen',
+            ],
             'labels' => [
                 'singular' => 'Frage',
                 'plural' => 'Fragen',
