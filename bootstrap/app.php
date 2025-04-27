@@ -15,11 +15,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(SetLocaleMiddleware::class);
         //
     })
-    ->withMiddleware(function (Middleware $middleware) {
-        $middleware->trustProxies(at: [
-            '*',
-        ]);
-    })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
