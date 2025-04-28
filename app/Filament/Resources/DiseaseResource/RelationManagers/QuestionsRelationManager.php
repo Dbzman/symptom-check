@@ -57,6 +57,11 @@ class QuestionsRelationManager extends RelationManager
                 ])
                 ->nullable()
                 ->helperText(__('filament.resources.questions.helpers.gender')),
+
+            Forms\Components\Toggle::make('reverse_meaning')
+                ->label(__('filament.resources.questions.fields.reverse_meaning'))
+                ->helperText(__('filament.resources.questions.helpers.reverse_meaning'))
+                ->default(false),
         ]);
     }
 
@@ -77,6 +82,9 @@ class QuestionsRelationManager extends RelationManager
                         ? __('filament.resources.questions.options.gender.male')
                         : __('filament.resources.questions.options.gender.female'))
                     : 'Alle'),
+            Tables\Columns\IconColumn::make('reverse_meaning')
+                ->label(__('filament.resources.questions.fields.reverse_meaning'))
+                ->boolean(),
         ])->filters([
             Tables\Filters\SelectFilter::make('criticality_level_id')
                 ->relationship('criticalityLevel', 'name')

@@ -63,6 +63,7 @@ return [
                 'disease' => 'Related Disease',
                 'criticality_level' => 'Criticality Level',
                 'gender' => 'Gender Specific',
+                'reverse_meaning' => 'Reverse Answer Meaning',
             ],
             'options' => [
                 'gender' => [
@@ -82,6 +83,7 @@ return [
                 'text' => 'The question that will be asked to the user',
                 'svg_icon' => 'Paste the SVG code (starting with <svg> and ending with </svg>) to display an icon with this question',
                 'svg_preview' => 'This is how your SVG icon will look in the form',
+                'reverse_meaning' => 'If enabled, a "No" answer will be treated as positive when evaluating results',
                             ],
                             'placeholders' => [
                 'text' => 'Enter question text',

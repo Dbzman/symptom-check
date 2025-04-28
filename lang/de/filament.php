@@ -63,6 +63,7 @@ return [
                 'disease' => 'Zugehörige Krankheit',
                 'criticality_level' => 'Kritikalitätsstufe',
                 'gender' => 'Geschlechtsspezifisch',
+                'reverse_meaning' => 'Antwortbedeutung umkehren',
             ],
             'options' => [
                 'gender' => [
@@ -82,6 +83,7 @@ return [
                 'text' => 'Die Frage, die dem Benutzer gestellt wird',
                 'svg_icon' => 'Fügen Sie den SVG-Code ein (beginnend mit <svg> und endend mit </svg>), um ein Symbol für diese Frage anzuzeigen',
                 'svg_preview' => 'So wird Ihr SVG-Symbol im Formular aussehen',
+                'reverse_meaning' => 'Wenn aktiviert, wird eine "Nein"-Antwort bei der Auswertung als positiv behandelt',
                             ],
                             'placeholders' => [
                 'text' => 'Geben Sie den Fragetext ein',

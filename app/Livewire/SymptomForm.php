@@ -89,11 +89,26 @@ class SymptomForm extends Component
     {
         if (!$this->outcome) {
             // Find questions answered 'yes' for the specified level
+            // Also include questions with reverse_meaning=true that were answered 'no'
             $levelYesAnswers = collect($this->answers)
-                ->filter(fn($v) => $v === 'yes')
-                ->keys()
-                ->map(fn($id) => Question::with('criticalityLevel')->find($id))
-                ->filter()
+                ->map(function($answer, $questionId) {
+                    return [
+                        'answer' => $answer,
+                        'question' => Question::with('criticalityLevel')->find($questionId)
+                    ];
+                })
+                ->filter(function($item) {
+                    if (!$item['question']) return false;
+
+                    // If reverse_meaning is true, then 'no' counts as a positive answer
+                    if ($item['question']->reverse_meaning) {
+                        return $item['answer'] === 'no';
+                    }
+
+                    // Otherwise, 'yes' counts as a positive answer
+                    return $item['answer'] === 'yes';
+                })
+                ->map(fn($item) => $item['question'])
                 ->filter(fn($q) => $q->criticality_level_id === $levelId);
 
             // Get the first 'yes' answered question for this level
@@ -189,10 +204,24 @@ class SymptomForm extends Component
             if ($oldLevelId && $oldLevelId !== $newLevelId) {
                 // Look for 'yes' answers in the level we just completed
                 if (collect($this->answers)
-                    ->filter(fn($v) => $v === 'yes')
-                    ->keys()
-                    ->map(fn($id) => Question::with('criticalityLevel')->find($id))
-                    ->filter()
+                    ->map(function($answer, $questionId) {
+                        return [
+                            'answer' => $answer,
+                            'question' => Question::with('criticalityLevel')->find($questionId)
+                        ];
+                    })
+                    ->filter(function($item) {
+                        if (!$item['question']) return false;
+
+                        // If reverse_meaning is true, then 'no' counts as a positive answer
+                        if ($item['question']->reverse_meaning) {
+                            return $item['answer'] === 'no';
+                        }
+
+                        // Otherwise, 'yes' counts as a positive answer
+                        return $item['answer'] === 'yes';
+                    })
+                    ->map(fn($item) => $item['question'])
                     ->filter(fn($q) => $q->criticality_level_id === $oldLevelId)
                     ->isNotEmpty()) {
 
@@ -259,7 +288,11 @@ class SymptomForm extends Component
 
         $this->answers[$this->currentQuestion->id] = $value;
 
-        if ($value === 'yes') {
+        // Check if this is a positive answer (yes for normal questions, no for reverse_meaning questions)
+        $isPositiveAnswer = ($value === 'yes' && !$this->currentQuestion->reverse_meaning) ||
+                           ($value === 'no' && $this->currentQuestion->reverse_meaning);
+
+        if ($isPositiveAnswer) {
             $crit = $this->currentQuestion->criticalityLevel;
             if ($crit && $crit->immediate_result) {
                 $this->outcome = Outcome::where('criticality_level_id', $crit->id)
@@ -279,10 +312,24 @@ class SymptomForm extends Component
     {
         if (!$this->outcome) {
             $mostSevereYes = collect($this->answers)
-                ->filter(fn($v) => $v === 'yes')
-                ->keys()
-                ->map(fn($id) => Question::with('criticalityLevel')->find($id))
-                ->filter()
+                ->map(function($answer, $questionId) {
+                    return [
+                        'answer' => $answer,
+                        'question' => Question::with('criticalityLevel')->find($questionId)
+                    ];
+                })
+                ->filter(function($item) {
+                    if (!$item['question']) return false;
+
+                    // If reverse_meaning is true, then 'no' counts as a positive answer
+                    if ($item['question']->reverse_meaning) {
+                        return $item['answer'] === 'no';
+                    }
+
+                    // Otherwise, 'yes' counts as a positive answer
+                    return $item['answer'] === 'yes';
+                })
+                ->map(fn($item) => $item['question'])
                 ->sortByDesc(fn($q) => $q->criticalityLevel->sort_order ?? 0)
                 ->first();
 

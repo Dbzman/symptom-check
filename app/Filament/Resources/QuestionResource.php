@@ -64,6 +64,11 @@ class QuestionResource extends Resource
                 ->relationship('criticalityLevel', 'name')
                 ->required(),
             FileUpload::make('icon'),
+
+            Forms\Components\Toggle::make('reverse_meaning')
+                ->label(__('filament.resources.questions.fields.reverse_meaning'))
+                ->helperText(__('filament.resources.questions.helpers.reverse_meaning'))
+                ->default(false),
         ]);
     }
 
@@ -75,6 +80,9 @@ class QuestionResource extends Resource
                 TextColumn::make('text')->label(__('filament.resources.questions.fields.text'))->searchable(),
                 TextColumn::make('gender')->label(__('filament.resources.questions.fields.gender'))->formatStateUsing(fn (string $state): string => __("filament.resources.questions.options.gender.{$state}")),
                 TextColumn::make('criticalityLevel.name')->label(__('filament.resources.questions.fields.criticality_level')),
+                Tables\Columns\IconColumn::make('reverse_meaning')
+                    ->label(__('filament.resources.questions.fields.reverse_meaning'))
+                    ->boolean(),
             ])
             ->defaultSort('id', 'asc')
             ->modifyQueryUsing(fn(Builder $query) => $query
