@@ -2,11 +2,8 @@
 
 use App\Http\Middleware\SetLocaleMiddleware;
 use App\Livewire\SymptomForm;
-use App\Livewire\Questions;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-
-Route::view('/', 'welcome');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -16,9 +13,7 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::get('/questions', Questions::class);
-
-Route::get('/symptoms', SymptomForm::class)->name('symptom.form')->middleware(SetLocaleMiddleware::class);
+Route::get('/', SymptomForm::class)->name('symptom.form')->middleware(SetLocaleMiddleware::class);
 
 Route::get('/result/{category}', function ($category) {
     return view('result', ['category' => $category]);
