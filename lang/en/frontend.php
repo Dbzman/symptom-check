@@ -3,7 +3,7 @@
 return [
     'outcome' => [
         'title' => 'Outcome',
-        'nothingDetected' => 'No disease detected detected.'
+        'nothingDetected' => 'No disease detected.'
     ],
     'reset' => 'Start over',
     'previous' => 'Previous',
