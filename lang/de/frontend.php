@@ -9,7 +9,7 @@ return [
     'previous' => 'Zurück',
     'next' => 'Weiter',
     'chooseGender' => 'Wählen Sie ihr biologisches Geschlecht:',
-    'genderExplain' => 'Wir fragen dies, da das biologische Alter einen deutlichen Unterschied macht bei einigen Krankheiten und deren Symptomen.',
+    'genderExplain' => 'Wir fragen dies, da das biologische Geschlecht einen deutlichen Unterschied macht bei einigen Krankheiten und deren Symptomen.',
     'male' => 'Männlich',
     'female' => 'Weiblich',
     'yes' => 'Trifft zu',
